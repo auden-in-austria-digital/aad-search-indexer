@@ -152,15 +152,6 @@ def create_verticals(doc: TeiReader, output_filename) -> None:
     write_to_tsv(output_file, doc_text, doc_tag_attributes)
 
 
-def process_xml_files(input_dir: str, output_dir: str) -> None:
-    create_dirs(output_dir)
-    xml_files = load_xml_files(input_dir)
-    for xml_file in tqdm(xml_files, total=len(xml_files)):
-        doc = TeiReader(xml_file)
-        filename = os.path.splitext(os.path.basename(xml_file))[0].replace(".xml", "")
-        create_verticals(doc, filename)
-
-
 def write_to_tsv(output_file: str, data_text: list, data_attributes: list) -> None:
     with open(output_file, "a", encoding="utf-8") as f:
         doc_id = os.path.basename(output_file).replace(".tsv", "")
@@ -168,6 +159,15 @@ def write_to_tsv(output_file: str, data_text: list, data_attributes: list) -> No
         for idx, text in enumerate(data_text) if data_text else []:
             f.write(text + "\t" + "\t".join(data_attributes[idx]) + "\n")
         f.write("</doc>\n")
+
+
+def process_xml_files(input_dir: str, output_dir: str) -> None:
+    create_dirs(output_dir)
+    xml_files = load_xml_files(input_dir)
+    for xml_file in tqdm(xml_files, total=len(xml_files)):
+        doc = TeiReader(xml_file)
+        filename = os.path.splitext(os.path.basename(xml_file))[0].replace(".xml", "")
+        create_verticals(doc, filename)
 
 
 if __name__ == "__main__":
