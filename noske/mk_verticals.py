@@ -20,17 +20,15 @@ NS = {
 }
 
 STRUCTURES = [
-    "tei:body//tei:p",
-    "tei:body//tei:list",
-    "tei:body//tei:head",
-    "tei:front//tei:docTitle",
-    "tei:front//tei:byline",
-    "tei:front//tei:docImprint"
+    "tei:head",
+    "tei:p",
+    "tei:lg",
+    "tei:titlePage"
 ]
 
-STRUCUTRE_ATTRIBUTES = [
-    "@xml:id"
-]
+# STRUCUTRE_ATTRIBUTES = [
+#     "@xml:id"
+# ]
 
 TAGS = [
     "tei:w",
@@ -122,34 +120,45 @@ def extract_tags_from_structures(doc_structures: list, tags: list) -> Generator[
 
 
 def extract_tag_attributes(doc_tags: list, tag_attributes: list) -> Generator[Any, Any, Any]:
-    for tag in doc_tags[0] if doc_tags else []:
-        if tag.tag == "{http://www.tei-c.org/ns/1.0}pc":
-            yield [""]
+    for tag in doc_tags:
+        if isinstance(tag, list):
+            for subtag in tag:
+                match subtag.tag:
+                    case "{http://www.tei-c.org/ns/1.0}pc":
+                        yield [""]
+                    case _:
+                        tag_attributes_text = subtag.xpath(list_to_xpaths(tag_attributes), namespaces=NS)
+                        yield tag_attributes_text
         else:
-            tag_attributes_text = tag.xpath(list_to_xpaths(tag_attributes), namespaces=NS)
-            yield tag_attributes_text
+            match tag.tag:
+                case "{http://www.tei-c.org/ns/1.0}pc":
+                    yield [""]
+                case _:
+                    tag_attributes_text = tag.xpath(list_to_xpaths(tag_attributes), namespaces=NS)
+                    yield tag_attributes_text
 
 
 def extract_text_from_tags(doc_tags: list, blacklist: list) -> Generator[Any, Any, Any]:
-    for tag in doc_tags[0] if doc_tags else []:
-        text = extract_fulltext(tag, blacklist)
-        if tag.tag == "{http://www.tei-c.org/ns/1.0}pc":
-            yield "<g/>\n" + text
+    for tag in doc_tags:
+        if isinstance(tag, list):
+            for subtag in tag:
+                text = extract_fulltext(subtag, blacklist)
+                match subtag.tag:
+                    case "{http://www.tei-c.org/ns/1.0}pc":
+                        yield "<g/>\n" + text
+                    case _:
+                        yield text
         else:
-            yield text
+            text = extract_fulltext(subtag, blacklist)
+            match tag.tag:
+                case "{http://www.tei-c.org/ns/1.0}pc":
+                    yield "<g/>\n" + text
+                case _:
+                    yield text
 
 
 def exhaust(generator) -> list:
     return deque(generator)
-
-
-def create_verticals(doc: TeiReader, output_filename) -> None:
-    doc_structures = extract_structure(doc, STRUCTURES)
-    doc_tags = exhaust(extract_tags_from_structures(doc_structures, TAGS))
-    doc_tag_attributes = exhaust(extract_tag_attributes(doc_tags, TAG_ATTRIBUTES))
-    doc_text = exhaust(extract_text_from_tags(doc_tags, BLACKLIST))
-    output_file = os.path.join(output_filepath, "verticals", f"{output_filename}.tsv")
-    write_to_tsv(output_file, doc_text, doc_tag_attributes)
 
 
 def write_to_tsv(output_file: str, data_text: list, data_attributes: list) -> None:
@@ -159,6 +168,23 @@ def write_to_tsv(output_file: str, data_text: list, data_attributes: list) -> No
         for idx, text in enumerate(data_text) if data_text else []:
             f.write(text + "\t" + "\t".join(data_attributes[idx]) + "\n")
         f.write("</doc>\n")
+
+
+def create_verticals(doc: TeiReader, output_filename) -> None:
+    doc_structures = extract_structure(doc, STRUCTURES)
+    with open("structures_from_doc.txt", "w", encoding="utf-8") as f:
+        f.write(str(doc_structures))
+    doc_tags = exhaust(extract_tags_from_structures(doc_structures, TAGS))
+    with open("tags_from_structures.txt", "w", encoding="utf-8") as f:
+        f.write(str(doc_tags))
+    doc_tag_attributes = exhaust(extract_tag_attributes(doc_tags, TAG_ATTRIBUTES))
+    with open("attributes_from_tags.txt", "w", encoding="utf-8") as f:
+        f.write(str(doc_tag_attributes))
+    doc_text = exhaust(extract_text_from_tags(doc_tags, BLACKLIST))
+    with open("text_from_tags.txt", "w", encoding="utf-8") as f:
+        f.write(str(doc_tag_attributes))
+    output_file = os.path.join(output_filepath, "verticals", f"{output_filename}.tsv")
+    write_to_tsv(output_file, doc_text, doc_tag_attributes)
 
 
 def process_xml_files(input_dir: str, output_dir: str) -> None:
