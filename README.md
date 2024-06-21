@@ -52,6 +52,7 @@ def create_index_record(doc: TeiReader, blacklist: list) -> dict:
 
 ## Noske Docker
 
+The Image uses [acdh-oeaw/noske-ubi9](https://github.com/acdh-oeaw/noske-ubi9) as base image.
 Build the Docker image with the ACDH Search Indexer scripts:
 
 ```shell
