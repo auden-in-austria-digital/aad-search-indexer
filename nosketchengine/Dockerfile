@@ -1,8 +1,8 @@
 FROM acdhch/noske:5.71.15-2.225.8-open
 LABEL maintainer omar.siam@oeaw.ac.at
 
-# rename the corpus list e.g. my-noske-corpus
-ENV CORPLIST my-noske-corpus
+# rename the corpus list e.g. mynoskecorpus
+ENV CORPLIST mynoskecorpus
 COPY data/verticals/ /var/lib/manatee/data/verticals/$CORPLIST/
 COPY nosketchengine/$CORPLIST /var/lib/manatee/registry/$CORPLIST
 # Build will not save anything in /var/lib/manatee/data/ as this is defined as VOLUME

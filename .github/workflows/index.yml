@@ -61,8 +61,8 @@ jobs:
           python --version
           python -m pip install pipenv
           pipenv install
-      - name: Build gestrich index data.jsonl
-        run: pipenv run python typesense/index.py
+      - name: Build and upload typesense index
+        run: pipenv run python typesense/mk_index.py
   
   noske_index:
     needs: [fetch_data]
@@ -132,7 +132,7 @@ jobs:
   
   _3:
     needs: [noske_index]
-    uses: ${{ github.env.ORG }}/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
+    uses: acdh-oeaw/gl-autodevops-minimal-port/.github/workflows/deploy.yml@main
     secrets: inherit
     with:
       DOCKER_TAG: ghcr.io/${{ github.env.ORG }}/${{ github.env.REPO }}/${{ github.env.PROJECT }}:latest

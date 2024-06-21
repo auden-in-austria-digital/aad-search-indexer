@@ -1,17 +1,17 @@
 ## Settings for TYPES ( MD_MD, MD_MI, map32 ) are suited for a SMALL (less than 200Mio token) corpus !
 ################################################
-########## CORPUS: Diarium ############
+########## CORPUS: ACDH/NOSKE ############
 ################################################
-NAME "diarium"
+NAME "acdhNoske"
 
 ## Path where to store the index files
-PATH "/var/lib/manatee/data/diarium"
+PATH "/var/lib/manatee/data/mynoskecorpus"
 ## Path where to find vertical files
 VERTICAL "| ls /var/lib/manatee/data/verticals/diarium/*.tsv | xargs cat"
 
 ENCODING "utf-8"
 MAINTAINER "daniel.elsner@oeaw.ac.at"
-LANGUAGE "18th Century German"
+LANGUAGE ""
 TAGSETDOC ""
 
 
