@@ -14,7 +14,7 @@ echo "unzipping data..."
 unzip $BRANCH
 
 echo "moving data to $DATA_DIR..."
-mkdir ./$DATA_DIR
+mkdir ./data
 mkdir ./$DATA_DIR
 mv ./$REPO-$BRANCH/$DATA_DIR/*.xml ./$DATA_DIR
 

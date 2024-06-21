@@ -172,17 +172,9 @@ def write_to_tsv(output_file: str, data_text: list, data_attributes: list) -> No
 
 def create_verticals(doc: TeiReader, output_filename) -> None:
     doc_structures = extract_structure(doc, STRUCTURES)
-    with open("structures_from_doc.txt", "w", encoding="utf-8") as f:
-        f.write(str(doc_structures))
     doc_tags = exhaust(extract_tags_from_structures(doc_structures, TAGS))
-    with open("tags_from_structures.txt", "w", encoding="utf-8") as f:
-        f.write(str(doc_tags))
     doc_tag_attributes = exhaust(extract_tag_attributes(doc_tags, TAG_ATTRIBUTES))
-    with open("attributes_from_tags.txt", "w", encoding="utf-8") as f:
-        f.write(str(doc_tag_attributes))
     doc_text = exhaust(extract_text_from_tags(doc_tags, BLACKLIST))
-    with open("text_from_tags.txt", "w", encoding="utf-8") as f:
-        f.write(str(doc_tag_attributes))
     output_file = os.path.join(output_filepath, "verticals", f"{output_filename}.tsv")
     write_to_tsv(output_file, doc_text, doc_tag_attributes)
 
