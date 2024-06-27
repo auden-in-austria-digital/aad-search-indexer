@@ -90,6 +90,7 @@
                                                                         self::tei:p[preceding-sibling::tei:pb]|
                                                                         self::tei:fw[preceding-sibling::tei:pb]|
                                                                         self::tei:ab[preceding-sibling::tei:pb]]">
+                                        <xsl:text> group 1 </xsl:text><xsl:value-of select="name()"/><xsl:value-of select="@type"/>
                                         <xsl:choose>
                                             <xsl:when test="self::tei:div">
                                                 <xsl:call-template name="text-window">
@@ -111,6 +112,7 @@
                                 </xsl:when>
                                 <xsl:when test="current-group()[ancestor::tei:floatingText]">
                                     <xsl:for-each select="current-group()[self::tei:p|self::tei:fw|self::tei:ab|self::tei:head|self::tei:quote]">
+                                    <xsl:text> group 1 </xsl:text><xsl:value-of select="name()"/>
                                         <xsl:call-template name="text-window">
                                             <xsl:with-param name="group">
                                                 <xsl:value-of select="'secondary'"/>
@@ -125,6 +127,7 @@
                                                                 self::tei:head|
                                                                 self::tei:fw|
                                                                 self::tei:quote]">
+                                        <xsl:text> group 1 </xsl:text><xsl:value-of select="name()"/>
                                         <xsl:choose>
                                             <xsl:when test="self::tei:quote">
                                                 <xsl:call-template name="text-window">
@@ -210,15 +213,47 @@
                     <xsl:apply-templates select="node()|@*"/>
                 </xsl:copy>
             </xsl:when>
-            <xsl:when test="parent::tei:div[@type='prose']/preceding-sibling::tei:div[@type='prose']">
+            <!-- <xsl:when test="parent::tei:div[@type='prose']/preceding-sibling::tei:div[@type='prose']">
                 <xsl:copy>
                     <xsl:apply-templates select="node()|@*"/>
                 </xsl:copy>
-            </xsl:when>
+            </xsl:when> -->
             <xsl:otherwise>
                 <!-- do not render handled in view-type.xsl -->
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="tei:ab">
+        <xsl:if test="not(preceding-sibling::tei:pb)">
+            <xsl:copy>
+                <xsl:apply-templates select="node()|@*"/>
+            </xsl:copy>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="tei:p">
+        <xsl:if test="not(preceding-sibling::tei:pb)">
+            <xsl:copy>
+                <xsl:apply-templates select="node()|@*"/>
+            </xsl:copy>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="tei:head">
+        <xsl:if test="not(preceding-sibling::tei:pb)">
+            <xsl:copy>
+                <xsl:apply-templates select="node()|@*"/>
+            </xsl:copy>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="tei:quote">
+        <xsl:if test="not(preceding-sibling::tei:pb)">
+            <xsl:copy>
+                <xsl:apply-templates select="node()|@*"/>
+            </xsl:copy>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="tei:p[preceding-sibling::tei:p[@prev]]">
@@ -228,11 +263,11 @@
                     <xsl:apply-templates select="node()|@*"/>
                 </xsl:copy>
             </xsl:when>
-            <xsl:when test="parent::tei:div[@type='prose']/preceding-sibling::tei:div[@type='prose']">
+            <!-- <xsl:when test="parent::tei:div[@type='prose']/preceding-sibling::tei:div[@type='prose']">
                 <xsl:copy>
                     <xsl:apply-templates select="node()|@*"/>
                 </xsl:copy>
-            </xsl:when>
+            </xsl:when> -->
             <xsl:otherwise>
                 <!-- do not render handled in view-type.xsl -->
             </xsl:otherwise>
