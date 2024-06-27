@@ -128,7 +128,7 @@ XPATHS = {
                     .//tei:quote|
                     .//tei:fw""",
     "date": ".//tei:origin/tei:origDate/@notBefore-iso|.//tei:origin/tei:origDate/text()",
-    "edition": ".//tei:text/@type"
+    "document_type": ".//tei:text/@type"
 }
 
 
