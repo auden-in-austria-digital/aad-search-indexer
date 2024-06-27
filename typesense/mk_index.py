@@ -311,7 +311,7 @@ def process_fils(files: str, blacklist: list, paginate: bool) -> list:
 
 
 if __name__ == "__main__":
-    debug = True
+    debug = False
     paginate = True
     cfts = True
     data_dir = DATA_DIR
