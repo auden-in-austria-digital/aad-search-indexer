@@ -256,7 +256,7 @@ def create_index_records(doc: TeiReader, blacklist: list) -> list:
                 case "date":
                     page_record[key] = items[0]
                     page_record["year"] = int(items[0].split("-")[0])
-                case "edition":
+                case "document_type":
                     page_record[key] = items
         # print(page_record)
         page_num += 1
