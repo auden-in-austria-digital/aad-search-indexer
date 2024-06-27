@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="tei2html">
+    <property name="editions" value="${basedir}/data/editions"/>
+    <property name="target" value="${basedir}/data/preprocessed"/>
+    <property name="xsl_preprocess" value="${basedir}/typesense/preprocess_typesense.xsl"/>
+    <mkdir dir="${target}"/>
+    <xslt style="${xsl_preprocess}" basedir="${editions}" destdir="${target}" includes="*.xml" extension=".xml">
+        <factory name="net.sf.saxon.TransformerFactoryImpl"/>
+        <classpath location="${basedir}/saxon/saxon9he.jar"/>
+    </xslt>
+</project>
