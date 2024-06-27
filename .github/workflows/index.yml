@@ -59,9 +59,8 @@ jobs:
       - name: add attributes and denormalize
         run: |
           python --version
-          python -m pip install pipenv
-          pipenv install
-          pipenv shell
+          pip install -U pip
+          pip install -r requirements.txt
           ./shellscripts/attributes.sh
           ./shellscripts/denormalize.sh
       - name: saxon preprocess
@@ -70,4 +69,4 @@ jobs:
           ./shellscripts/dl_saxon.sh
           ant
       - name: Build and upload typesense index
-        run: pipenv run python typesense/mk_index.py
+        run: python typesense/mk_index.py
