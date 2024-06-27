@@ -56,13 +56,9 @@ jobs:
         with:
           python-version: "3.10"
           cache: "pipenv"
-      - name: Install dependencies
-        run: |
-          python --version
-          python -m pip install pipenv
-          pipenv install
       - name: add attributes and denormalize
         run: |
+          pipenv install
           pipenv shell
           ./shellscripts/attributes.sh
           ./shellscripts/denormalize.sh
@@ -71,5 +67,10 @@ jobs:
           apt-get update && apt-get install openjdk-11-jre-headless ant -y --no-install-recommend
           ./shellscripts/dl_saxon.sh
           ant
+      - name: Install dependencies
+        run: |
+          python --version
+          python -m pip install pipenv
+          pipenv install
       - name: Build and upload typesense index
         run: pipenv run python typesense/mk_index.py
