@@ -134,7 +134,7 @@ XPATHS = {
                     .//tei:quote|
                     .//tei:fw""",
     "date": ".//tei:origin/tei:origDate/@notBefore-iso|.//tei:origin/tei:origDate/text()",
-    "document_type": ".//tei:text/tei:div/tei:div/@type",
+    "document_type": "@subtype",
     "edition": ".//tei:titleStmt/tei:title[@level='s']",
 }
 
@@ -251,6 +251,8 @@ def create_index_records(doc: TeiReader, blacklist: list) -> list:
                 case "page_str":
                     page_record[key] = str(items[0])
                     page_record['page_int'] = int(page_num)
+                case "document_type":
+                    page_record[key] = [items[0]]
             items = extract_structure(doc, value)
             match key:
                 case "id":
@@ -264,8 +266,6 @@ def create_index_records(doc: TeiReader, blacklist: list) -> list:
                 case "date":
                     page_record[key] = items[0]
                     page_record["year"] = int(items[0].split("-")[0])
-                case "document_type":
-                    page_record[key] = items
         # print(page_record)
         page_num += 1
         if len(page_record["full_text"]) > 0:
@@ -320,7 +320,7 @@ def process_fils(files: str, blacklist: list, paginate: bool) -> list:
 
 
 if __name__ == "__main__":
-    debug = False
+    debug = True
     paginate = True
     cfts = False
     data_dir = DATA_DIR

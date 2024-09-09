@@ -29,7 +29,7 @@
                 <xsl:when test="./tei:div[@type='letter' or @type='envelope']">
                     <xsl:for-each-group select="./tei:div[@type]/*|./tei:div[@type]/tei:div[@type]/*" group-starting-with="tei:pb">
                         <xsl:variable name="positionOrNot" select="if(current-group()/self::tei:pb/@ed) then(current-group()/self::tei:pb/@ed) else(position())"/>
-                        <div type="page" ed="{$positionOrNot}" facs="{current-group()/self::tei:pb/@facs}">
+                        <div type="page" ed="{$positionOrNot}" facs="{current-group()/self::tei:pb/@facs}" subtype="Correspondence">
                             <xsl:choose>
                                 <xsl:when test="current-group()[self::tei:div[@type='letter_message']| self::tei:div[@type='poem']| self::tei:div[@type='speech']| self::tei:div[@type='prose_translation']| self::tei:div[@type='comments']]">
                                     <xsl:for-each select="current-group()[self::tei:div|
@@ -82,7 +82,7 @@
                 <xsl:when test="./tei:div[@type='prose']">
                     <xsl:for-each-group select="*|./tei:div/*|//tei:floatingText/tei:body/tei:div/*" group-starting-with="tei:pb">
                         <xsl:variable name="positionOrNot" select="if(current-group()/self::tei:pb/@ed) then(current-group()/self::tei:pb/@ed) else(position())"/>
-                        <div type="page" ed="{$positionOrNot}" facs="{current-group()/self::tei:pb/@facs}">
+                        <div type="page" ed="{$positionOrNot}" facs="{current-group()/self::tei:pb/@facs}" subtype="Prose">
                             <xsl:choose>
                                 <xsl:when test="current-group()[self::tei:div]">
             
@@ -154,7 +154,7 @@
                 <xsl:otherwise>
                     <xsl:for-each-group select="./tei:div[@type='photo']/*" group-starting-with="tei:pb">
                         <xsl:variable name="positionOrNot" select="if(current-group()/self::tei:pb/@ed) then(current-group()/self::tei:pb/@ed) else(position())"/>
-                        <div type="page" ed="{$positionOrNot}" facs="{current-group()/self::tei:pb/@facs}">
+                        <div type="page" ed="{$positionOrNot}" facs="{current-group()/self::tei:pb/@facs}" subtype="Photo">
                             <xsl:for-each select="current-group()[self::tei:lg|
                                                     self::tei:p|
                                                     self::tei:fw|
