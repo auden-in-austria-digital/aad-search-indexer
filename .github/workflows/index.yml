@@ -22,7 +22,7 @@ jobs:
         with:
           path: ./${{ github.env.DATA_DIR }}
           key:
-            build-${{ env.cache-name }}-${{ hashFiles('**/fetch-data.sh') }}
+            build-${{ env.cache-name }}-${{ hashFiles('./shellscripts/fetch-data.sh') }}
           restore-keys: |
             build-${{ env.cache-name }}-
             build-
@@ -47,7 +47,7 @@ jobs:
         with:
           path: ./${{ github.env.DATA_DIR }}
           key:
-            build-${{ env.cache-name }}-${{ hashFiles('**/fetch-data.sh') }}
+            build-${{ env.cache-name }}-${{ hashFiles('./shellscripts/fetch-data.sh') }}
           restore-keys: |
             build-${{ env.cache-name }}-
             build-
