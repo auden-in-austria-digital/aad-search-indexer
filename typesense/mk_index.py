@@ -13,7 +13,7 @@ from acdh_tei_pyutils.utils import extract_fulltext
 
 DATA_DIR = "./data/preprocessed"
 
-TS_INDEX_NAME = "amp"
+TS_INDEX_NAME = "aad"
 
 BLACKLIST = [
     "{http://www.tei-c.org/ns/1.0}del",
@@ -87,6 +87,12 @@ CURRENT_SCHEMA = {
             'facet': True,
         },
         {
+            'name': 'edition',
+            'type': 'string[]',
+            'optional': True,
+            'facet': True,
+        },
+        {
             'name': 'image',
             'type': 'string',
         },
@@ -128,7 +134,8 @@ XPATHS = {
                     .//tei:quote|
                     .//tei:fw""",
     "date": ".//tei:origin/tei:origDate/@notBefore-iso|.//tei:origin/tei:origDate/text()",
-    "document_type": ".//tei:text/@type"
+    "document_type": ".//tei:text/tei:div/tei:div/@type",
+    "edition": ".//tei:titleStmt/tei:title[@level='s']",
 }
 
 
@@ -149,20 +156,19 @@ def get_context(xpath, page):
 def get_entities(ent_type, ent_node, ent_name, page, doc):
     entities = []
     e_path = f'.//tei:rs[@type="{ent_type}"]/@ref'
-    for p in page:
-        try:
-            ent = p.xpath(e_path, namespaces={'tei': "http://www.tei-c.org/ns/1.0"})
-        except AttributeError:
-            ent = []
-        ref = [ref.replace("#", "") for e in ent if len(ent) > 0 for ref in e.split()]
-        if len(ref) > 0:
-            for r in ref:
-                p_path = f'.//tei:{ent_node}[@xml:id="{r}"]//tei:{ent_name}[1]'
-                en = doc.any_xpath(p_path)
-                if en:
-                    entity = " ".join(" ".join(en[0].xpath(".//text()")).split())
-                    if len(entity) != 0:
-                        entities.append(entity)
+    try:
+        ent = page.xpath(e_path, namespaces={'tei': "http://www.tei-c.org/ns/1.0"})
+    except AttributeError:
+        ent = []
+    ref = [ref.replace("#", "") for e in ent if len(ent) > 0 for ref in e.split()]
+    if len(ref) > 0:
+        for r in ref:
+            p_path = f'.//tei:{ent_node}[@xml:id="{r}"]//tei:{ent_name}[1]'
+            en = doc.any_xpath(p_path)
+            if en:
+                entity = " ".join(" ".join(en[0].xpath(".//text()")).split())
+                if len(entity) != 0:
+                    entities.append(entity)
     return [ent for ent in sorted(set(entities))]
 
 
@@ -253,6 +259,8 @@ def create_index_records(doc: TeiReader, blacklist: list) -> list:
                     page_record[key] = items[0]
                 case "title":
                     page_record[key] = " ".join([extract_text(text, blacklist) for text in items])
+                case "edition":
+                    page_record[key] = [" ".join([extract_text(text, blacklist) for text in items])]
                 case "date":
                     page_record[key] = items[0]
                     page_record["year"] = int(items[0].split("-")[0])
@@ -300,6 +308,7 @@ def create_index_record(doc: TeiReader, blacklist: list) -> dict:
 def process_fils(files: str, blacklist: list, paginate: bool) -> list:
     records = []
     for file in tqdm(files, total=len(files)):
+        print(file)
         doc = TeiReader(file)
         if paginate:
             rec_lists = create_index_records(doc, blacklist)
@@ -311,9 +320,9 @@ def process_fils(files: str, blacklist: list, paginate: bool) -> list:
 
 
 if __name__ == "__main__":
-    debug = False
+    debug = True
     paginate = True
-    cfts = True
+    cfts = False
     data_dir = DATA_DIR
     records, counter = process_fils(load_xml_files(data_dir), BLACKLIST, paginate)
     if cfts:

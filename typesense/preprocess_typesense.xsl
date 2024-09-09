@@ -23,10 +23,10 @@
     <xsl:template match="tei:fw"/>
     <xsl:template match="tei:ab"/>
 
-    <xsl:template match="tei:div[@type='transcription' or @xml:id='transcription']">
+    <xsl:template match="tei:div[@type='transcription']">
         <xsl:copy>
             <xsl:choose>
-                <xsl:when test="ancestor::tei:text[@type='letter']">
+                <xsl:when test="./tei:div[@type='letter' or @type='envelope']">
                     <xsl:for-each-group select="./tei:div[@type]/*|./tei:div[@type]/tei:div[@type]/*" group-starting-with="tei:pb">
                         <xsl:variable name="positionOrNot" select="if(current-group()/self::tei:pb/@ed) then(current-group()/self::tei:pb/@ed) else(position())"/>
                         <div type="page" ed="{$positionOrNot}" facs="{current-group()/self::tei:pb/@facs}">
@@ -79,7 +79,7 @@
                         </div>
                     </xsl:for-each-group>
                 </xsl:when>
-                <xsl:when test="ancestor::tei:text[@type='prose']">
+                <xsl:when test="./tei:div[@type='prose']">
                     <xsl:for-each-group select="*|./tei:div/*|//tei:floatingText/tei:body/tei:div/*" group-starting-with="tei:pb">
                         <xsl:variable name="positionOrNot" select="if(current-group()/self::tei:pb/@ed) then(current-group()/self::tei:pb/@ed) else(position())"/>
                         <div type="page" ed="{$positionOrNot}" facs="{current-group()/self::tei:pb/@facs}">
@@ -152,7 +152,7 @@
                     </xsl:for-each-group>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:for-each-group select="*" group-starting-with="tei:pb">
+                    <xsl:for-each-group select="./tei:div[@type='photo']/*" group-starting-with="tei:pb">
                         <xsl:variable name="positionOrNot" select="if(current-group()/self::tei:pb/@ed) then(current-group()/self::tei:pb/@ed) else(position())"/>
                         <div type="page" ed="{$positionOrNot}" facs="{current-group()/self::tei:pb/@facs}">
                             <xsl:for-each select="current-group()[self::tei:lg|

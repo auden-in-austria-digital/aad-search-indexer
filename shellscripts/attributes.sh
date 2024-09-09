@@ -1,4 +1,4 @@
 # bin/bash
 
 echo "add attributes"
-add-attributes -g "./data/editions/*.xml" -b "https://amp.acdh.oeaw.ac.at"
+add-attributes -g "./data/editions/*.xml" -b "https://aad.acdh.oeaw.ac.at"

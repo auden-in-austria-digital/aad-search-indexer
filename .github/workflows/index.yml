@@ -4,10 +4,10 @@ on:
   workflow_dispatch: {}
 
 env:
-  ORG: auden-musulin-papers
-  REPO: amp-search-indexer
+  ORG: auden-in-austria-digital
+  REPO: aad-search-indexer
   DATA_DIR: data/editions
-  PROJECT: amp-indexer
+  PROJECT: aad-indexer
 
 jobs:
   fetch_data:
