@@ -278,9 +278,9 @@ def create_cfts_record(project_record: dict) -> dict:
     for key, value in CFTS_SCHEMA.items():
         match key:
             case "project":
-                record[key] = "amp"
+                record[key] = "aad"
             case "resolver":
-                record[key] = f'https://amp.acdh.oeaw.ac.at/{project_record["id"]}'
+                record[key] = f'https://aad.acdh.oeaw.ac.at/{project_record["id"]}'
             case _:
                 record[key] = project_record[key]
     return record
@@ -352,5 +352,5 @@ if __name__ == "__main__":
         if cfts:
             make_cfts_index = CFTS_COLLECTION.documents.import_(cfts_records, {'action': 'upsert'})
             print(make_cfts_index)
-            print(f"done with indexing of {len(cfts_records)} documents in CFTS_AMP_COLLECTION")
+            print(f"done with indexing of {len(cfts_records)} documents in CFTS_AAD_COLLECTION")
     print("done")
