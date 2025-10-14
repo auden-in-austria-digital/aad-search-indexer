@@ -247,7 +247,10 @@ def create_index_records(doc: TeiReader, blacklist: list) -> list:
                     page_record['comments_bool'], page_record['comments_count'] = get_context('.//node()[@ana]', page)
                     page_record['poem_bool'], page_record['poem_count'] = get_context('.//tei:l', page)
                 case "image":
-                    page_record[key] = items[0].split("/")[-2]
+                    if items[0] != "":
+                        page_record[key] = items[0].split("/")[-2]
+                    else:
+                        page_record[key] = ""
                 case "page_str":
                     page_record[key] = str(items[0])
                     page_record['page_int'] = int(page_num)
